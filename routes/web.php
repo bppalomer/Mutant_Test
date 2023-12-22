@@ -24,7 +24,8 @@ Route::get('/', function () {
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/viewUserInfo', [AdminController::class, 'viewUserInfo'])->name('viewUserInfo');
+    Route::get('/viewUserInfo', [AdminController::class, 'viewUserInfo'])->name('viewUserInfo'); 
+    Route::patch('/update-user/{userId}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
     Route::get('/showFormToAddProducts', [AdminController::class, 'showFormToAddProducts'])->name('showFormToAddProducts');
     Route::post('/submitFormToAddProducts', [AdminController::class, 'submitFormToAddProducts'])->name('submitFormToAddProducts');
 });
