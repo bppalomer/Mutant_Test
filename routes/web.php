@@ -24,10 +24,20 @@ Route::get('/', function () {
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
+
+// Routes for viewing the user
     Route::get('/viewUserInfo', [AdminController::class, 'viewUserInfo'])->name('viewUserInfo'); 
-    Route::patch('/update-user/{userId}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
+
+//Routes for add products using the admin
     Route::get('/showFormToAddProducts', [AdminController::class, 'showFormToAddProducts'])->name('showFormToAddProducts');
     Route::post('/submitFormToAddProducts', [AdminController::class, 'submitFormToAddProducts'])->name('submitFormToAddProducts');
+
+// Routes for updating user
+    Route::get('/update-user/{userId}', [AdminController::class, 'updateUser'])->name('updateUser');
+    Route::patch('/save-updated-user/{userId}', [AdminController::class, 'saveUpdatedUser'])->name('saveUpdatedUser');
+
+// Route for deleting user
+    Route::delete('/delete-user/{userId}', [AdminController::class, 'deleteUser'])->name('deleteUser');
 });
 
 Route::middleware('auth')->group(function () {

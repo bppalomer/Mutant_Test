@@ -74,5 +74,18 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'User information updated successfully.');
     }
+
+    public function deleteUser($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            abort(404);
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'User account deleted successfully.');
+    }
     
 }
