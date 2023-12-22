@@ -9,11 +9,6 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function showFormToAddProducts()
-    {
-        return view('components.add_product');
-    }
-
     public function submitFormToAddProducts(Request $request)
     {
 
@@ -35,9 +30,8 @@ class AdminController extends Controller
     public function viewUserInfo()
     {
         $userInfo = User::all();
-        $content = View::make('components.user_table', compact('userInfo'))->render();
 
-        return response()->json(['content' => $content]);
+        return response()->json(['users' => $userInfo]);
     }
 
     public function updateUser($userId)
@@ -48,9 +42,7 @@ class AdminController extends Controller
             abort(404);
         }
 
-        $content = View::make('components.update_user_form', compact('user'))->render();
-
-        return response()->json(['content' => $content]);
+        return response()->json(['users' => $user]);
     }
 
     public function saveUpdatedUser(Request $request, $userId)
@@ -62,8 +54,8 @@ class AdminController extends Controller
         }
 
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255',
             'usertype' => 'required|in:user,admin',
         ]);
 

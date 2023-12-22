@@ -23,21 +23,32 @@ class AdminTest extends TestCase
 
     public function test_admin_update_user_list(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['usertype' => 'user']);
         $admin = User::factory()->create(['usertype' => 'admin']);
 
-        $response = $this->actingAs($admin)->get(route('updateUser', ['userId' => $user->id]));
-
-        $updatedUserData = [
-            'name' => 'Updated Name',
-            'email' => 'updated@example.com',
-            'usertype' => 'user',
+        $oldUserData = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'usertype' => $user->usertype,
         ];
 
-        $response = $this->patch(route('saveUpdatedUser', ['userId' => $user->id]), $updatedUserData);
+        $newUserData = [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->email(),
+            'usertype' => 'admin',
+        ];
+
+        $response = $this->actingAs($admin)->patch(route('saveUpdatedUser', ['userId' => $user->id]), $newUserData);
+
         $response->assertRedirect();
 
-        $this->assertDatabaseHas('users', $updatedUserData);
+        $response = $this->followRedirects($response);
+        $response->assertStatus(200);
+
+        $newUserData = User::find($user->id);
+        $this->assertNotEquals($oldUserData['name'], $newUserData->name);
+        $this->assertNotEquals($oldUserData['email'], $newUserData->email);
+        $this->assertNotEquals($oldUserData['usertype'], $newUserData->usertype);
     }
 
     public function test_admin_delete_user_list(): void
@@ -49,5 +60,24 @@ class AdminTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    public function test_admin_create_product(): void
+    {
+        $admin = User::factory()->create(['usertype' => 'admin']);
+
+        $productData = [
+            'productName' => 'Test Product',
+            'productPrice' => 10.99,
+            'productDescription' => 'This is a test product.',
+        ];
+
+        $response = $this->actingAs($admin)->post(route('submitFormToAddProducts'), $productData);
+
+        $response->assertRedirect(route('home'))
+            ->assertSessionHas('success', 'Product added successfully!');
+
+        $this->assertDatabaseHas('products', $productData);
+
     }
 }

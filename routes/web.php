@@ -29,7 +29,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/viewUserInfo', [AdminController::class, 'viewUserInfo'])->name('viewUserInfo'); 
 
 //Routes for add products using the admin
-    Route::get('/showFormToAddProducts', [AdminController::class, 'showFormToAddProducts'])->name('showFormToAddProducts');
     Route::post('/submitFormToAddProducts', [AdminController::class, 'submitFormToAddProducts'])->name('submitFormToAddProducts');
 
 // Routes for updating user

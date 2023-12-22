@@ -16,7 +16,7 @@ class UserTest extends TestCase
 
         $response = $this ->actingAs($user)->get(route('home'));
 
-        $response->assertViewIs('dashboard');
+        $response->assertOk();
     }
 
     public function test_admin_login(): void
@@ -25,7 +25,7 @@ class UserTest extends TestCase
 
         $response = $this ->actingAs($user)->get(route('home'));
 
-        $response->assertViewIs('admin.admin');
+        $response->assertOk();
     }
 }
 

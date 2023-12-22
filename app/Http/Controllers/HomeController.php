@@ -15,7 +15,7 @@ class HomeController extends Controller
             if ($usertype === 'user') {
                 return view('dashboard');
             } else if ($usertype === 'admin') {
-                return view('admin.admin');
+                return view('admin');
             } else {
                 return view('auth.login');   
             }
